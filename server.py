@@ -16,8 +16,8 @@ def render_index_page():
 
 @app.route("/emotionDetector")
 def detect_emotion():
-    """Analyze the given text and return the formatted emotion response."""
-    text_to_analyze = request.args.get("textToAnalyze")
+    """Analyze text and return formatted emotion response."""
+    text_to_analyze = request.args.get("textToAnalyze", "")
     response = emotion_detector(text_to_analyze)
 
     anger = response["anger"]
@@ -26,6 +26,9 @@ def detect_emotion():
     joy = response["joy"]
     sadness = response["sadness"]
     dominant_emotion = response["dominant_emotion"]
+
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!"
 
     return (
         "For the given statement, the system response is "

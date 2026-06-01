@@ -1,3 +1,5 @@
+"""Emotion detection module using Watson NLP."""
+
 import json
 import requests
 
@@ -16,9 +18,19 @@ def emotion_detector(text_to_analyze):
         }
     }
 
-    response = requests.post(url, headers=headers, json=input_json)
-    formatted_response = json.loads(response.text)
+    response = requests.post(url, headers=headers, json=input_json, timeout=30)
 
+    if response.status_code == 400:
+        return {
+            "anger": None,
+            "disgust": None,
+            "fear": None,
+            "joy": None,
+            "sadness": None,
+            "dominant_emotion": None
+        }
+
+    formatted_response = json.loads(response.text)
     emotions = formatted_response["emotionPredictions"][0]["emotion"]
 
     anger_score = emotions["anger"]
